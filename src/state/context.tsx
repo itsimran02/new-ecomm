@@ -9,7 +9,7 @@ interface FilterContextType {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   selectedCategory: string;
-  setSelectedCategory: (query: string) => void;
+  setSelectedCategory: (category: string) => void;
   minPrice: number | "";
   setMinPrice: (price: number | "") => void;
   maxPrice: number | "";
@@ -31,15 +31,11 @@ const FilterContextProvider = ({
     useState<string>("");
   const [selectedCategory, setSelectedCategory] =
     useState<string>("");
-  const [minPrice, setMinPrice] = useState<number | string>(
-    ""
-  );
-  const [maxPrice, setMaxPrice] = useState<number | string>(
-    ""
-  );
+  const [minPrice, setMinPrice] = useState<number | "">("");
+  const [maxPrice, setMaxPrice] = useState<number | "">("");
   const [keyword, setKeyword] = useState<string>("");
 
-  const stateData = {
+  const stateData: FilterContextType = {
     searchQuery,
     setSearchQuery,
     selectedCategory,
