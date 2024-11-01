@@ -3,19 +3,21 @@ import {
   useContext,
   useState,
   ReactNode,
+  Dispatch,
+  SetStateAction,
 } from "react";
 
 interface FilterContextType {
   searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
   selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
+  setSelectedCategory: Dispatch<SetStateAction<string>>;
   minPrice: number | "";
-  setMinPrice: (price: number | "") => void;
+  setMinPrice: Dispatch<SetStateAction<number | "">>;
   maxPrice: number | "";
-  setMaxPrice: (price: number | "") => void;
+  setMaxPrice: Dispatch<SetStateAction<number | "">>;
   keyword: string;
-  setKeyword: (keyword: string) => void;
+  setKeyword: Dispatch<SetStateAction<string>>;
 }
 
 const FilterContext = createContext<
@@ -27,29 +29,28 @@ const FilterContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [searchQuery, setSearchQuery] =
-    useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
-    useState<string>("");
+    useState("");
   const [minPrice, setMinPrice] = useState<number | "">("");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
-  const [keyword, setKeyword] = useState<string>("");
-
-  const stateData: FilterContextType = {
-    searchQuery,
-    setSearchQuery,
-    selectedCategory,
-    setSelectedCategory,
-    minPrice,
-    setMinPrice,
-    maxPrice,
-    setMaxPrice,
-    keyword,
-    setKeyword,
-  };
+  const [keyword, setKeyword] = useState("");
 
   return (
-    <FilterContext.Provider value={stateData}>
+    <FilterContext.Provider
+      value={{
+        searchQuery,
+        setSearchQuery,
+        selectedCategory,
+        setSelectedCategory,
+        minPrice,
+        setMinPrice,
+        maxPrice,
+        setMaxPrice,
+        keyword,
+        setKeyword,
+      }}
+    >
       {children}
     </FilterContext.Provider>
   );
