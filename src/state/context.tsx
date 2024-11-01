@@ -3,21 +3,21 @@ import {
   useContext,
   useState,
   ReactNode,
-  Dispatch,
-  SetStateAction,
 } from "react";
+
+type Price = number | "";
 
 interface FilterContextType {
   searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
+  setSearchQuery: (value: string) => void;
   selectedCategory: string;
-  setSelectedCategory: Dispatch<SetStateAction<string>>;
-  minPrice: number | "";
-  setMinPrice: Dispatch<SetStateAction<number | "">>;
-  maxPrice: number | "";
-  setMaxPrice: Dispatch<SetStateAction<number | "">>;
+  setSelectedCategory: (value: string) => void;
+  minPrice: Price;
+  setMinPrice: (value: Price) => void;
+  maxPrice: Price;
+  setMaxPrice: (value: Price) => void;
   keyword: string;
-  setKeyword: Dispatch<SetStateAction<string>>;
+  setKeyword: (value: string) => void;
 }
 
 const FilterContext = createContext<
@@ -29,28 +29,40 @@ const FilterContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] =
+    useState<string>("");
   const [selectedCategory, setSelectedCategory] =
-    useState("");
-  const [minPrice, setMinPrice] = useState<number | "">("");
-  const [maxPrice, setMaxPrice] = useState<number | "">("");
-  const [keyword, setKeyword] = useState("");
+    useState<string>("");
+  const [minPrice, setMinPrice] = useState<Price>("");
+  const [maxPrice, setMaxPrice] = useState<Price>("");
+  const [keyword, setKeyword] = useState<string>("");
+
+  // Create a type-safe setter that ensures only number or "" is accepted
+  const safeSetMinPrice = (value: Price) => {
+    // Ensure only number or "" is set
+    setMinPrice(value === "" ? "" : Number(value));
+  };
+
+  const safeSetMaxPrice = (value: Price) => {
+    // Ensure only number or "" is set
+    setMaxPrice(value === "" ? "" : Number(value));
+  };
+
+  const contextValue: FilterContextType = {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    minPrice,
+    setMinPrice: safeSetMinPrice,
+    maxPrice,
+    setMaxPrice: safeSetMaxPrice,
+    keyword,
+    setKeyword,
+  };
 
   return (
-    <FilterContext.Provider
-      value={{
-        searchQuery,
-        setSearchQuery,
-        selectedCategory,
-        setSelectedCategory,
-        minPrice,
-        setMinPrice,
-        maxPrice,
-        setMaxPrice,
-        keyword,
-        setKeyword,
-      }}
-    >
+    <FilterContext.Provider value={contextValue}>
       {children}
     </FilterContext.Provider>
   );
